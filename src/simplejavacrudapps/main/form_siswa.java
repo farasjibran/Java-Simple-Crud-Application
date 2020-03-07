@@ -39,6 +39,7 @@ public class form_siswa extends javax.swing.JFrame {
         
          //  Setting agar nama table masuk kedalam table
                 tableSiswa.setModel(model);
+                model.addColumn("NIPD");
                 model.addColumn("NISN");
                 model.addColumn("Nama Siswa");
                 model.addColumn("Umur");
@@ -58,9 +59,9 @@ public class form_siswa extends javax.swing.JFrame {
      
     // Fuctioning
     
-    // Tampil data
-    private
-        void tampilData()
+            // Tampil data
+            private
+            void tampilData()
             {
                 System.out.println("Tampil data");
                 int row = tableSiswa.getRowCount();
@@ -98,7 +99,7 @@ public class form_siswa extends javax.swing.JFrame {
                                 String jurusan = rs.getString("jurusan");
 
                                 // Array untuk menampung semua data
-                                String[] datasiswa = {nisn, namasiswa, umur, alamat, kelamin, agama, tempatlhr, tgl_lhr, nomor_hp, email, jurusan};
+                                String[] datasiswa = {nipd, nisn, namasiswa, umur, alamat, kelamin, agama, tempatlhr, tgl_lhr, nomor_hp, email, jurusan};
 
                                 // Menambahkan baris sesuai data yang telah di tampung
                                 model.addRow(datasiswa);
@@ -110,9 +111,9 @@ public class form_siswa extends javax.swing.JFrame {
                     }
             }
         
-        // Tambah data 
-        private
-        void tambahData()
+            // Tambah data 
+            private
+            void tambahData()
             {
                 // Menampung data sementara yang telah di input
                 String nisn = textnisn.getText();
@@ -219,7 +220,7 @@ public class form_siswa extends javax.swing.JFrame {
                     }
             }
         
-         //  Clear data 
+            //  Clear data 
             private
             void clearData()
                 {
@@ -244,16 +245,17 @@ public class form_siswa extends javax.swing.JFrame {
                  int i = tableSiswa.getSelectedRow();
 
                                 // Mengambil data
-                                String nisn = model.getValueAt(i, 0).toString();
-                                String nama = model.getValueAt(i, 1).toString();
-                                String umur = model.getValueAt(i, 2).toString();
-                                String alamat = model.getValueAt(i, 3).toString();
-                                String kelamin = model.getValueAt(i, 4).toString();
-                                String agama = model.getValueAt(i, 5).toString();
-                                String tempatlahir = model.getValueAt(i, 6).toString();
-                                String nomor_hp = model.getValueAt(i, 8).toString();
-                                String email = model.getValueAt(i, 9).toString();
-                                String jurusan = model.getValueAt(i, 10).toString();   
+                                String nipd = model.getValueAt(i, 0).toString();
+                                String nisn = model.getValueAt(i, 1).toString();
+                                String nama = model.getValueAt(i, 2).toString();
+                                String umur = model.getValueAt(i, 3).toString();
+                                String alamat = model.getValueAt(i, 4).toString();
+                                String kelamin = model.getValueAt(i, 5).toString();
+                                String agama = model.getValueAt(i, 6).toString();
+                                String tempatlahir = model.getValueAt(i, 7).toString();
+                                String nomor_hp = model.getValueAt(i, 9).toString();
+                                String email = model.getValueAt(i, 10).toString();
+                                String jurusan = model.getValueAt(i, 11).toString();   
                                 
                                 // Setting agama
                                 if (agama.equals("Islam"))
@@ -302,7 +304,7 @@ public class form_siswa extends javax.swing.JFrame {
                                 Date myDate = null;
                                     try 
                                     {
-                                        myDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse((String) model.getValueAt(i, 7).toString());
+                                        myDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse((String) model.getValueAt(i, 8).toString());
                                         tgllahir.setDate(myDate);
                                     }
                                     catch (ParseException ex) 
@@ -341,7 +343,8 @@ public class form_siswa extends javax.swing.JFrame {
             {
                 int i = tableSiswa.getSelectedRow();
 
-                                String nisn = model.getValueAt(i, 0).toString();
+                                String nipd = model.getValueAt(i, 0).toString();
+                                String nisn = textnisn.getText();
                                 String nama = textnama.getText();
                                 String umur = textumur.getText();
                                 String alamat = textalamat.getText();
@@ -420,7 +423,7 @@ public class form_siswa extends javax.swing.JFrame {
 
                                 String query = "UPDATE `siswa` SET `nisn` = '"+nisn+"', `namasiswa` = '"+nama+"', `umur` = '"+umur+"', `alamat` = '"+alamat+"', `kelamin` = '"+kelamin+"', "
                                         + "`agama` = '"+agama+"', `tempat_lahir` = '"+tempatlahir+"', `tgl_lahir` = '"+tgllahir+"', `nomor_hp` = '"+nomorhp+"', "
-                                        + "`email` = '"+email+"', `jurusan` = '"+jurusan+"' WHERE `siswa`.`nisn` = '"+nisn+"';";
+                                        + "`email` = '"+email+"', `jurusan` = '"+jurusan+"' WHERE `siswa`.`nipd` = '"+nipd+"';";
 
                                 // Menyiapkan alamat untuk dieksekusi
                                 try
@@ -441,6 +444,39 @@ public class form_siswa extends javax.swing.JFrame {
                                         tampilData();
                                         clearData();
                                     }
+            }
+            
+            // Hapus data
+            private
+            void hapusData()
+            {
+            int i = tableSiswa.getSelectedRow();
+
+            String nipd = model.getValueAt(i, 0).toString();
+
+            Connection conn = Koneksi.GetConnect();
+
+            String query = "DELETE FROM `siswa` WHERE `siswa`.`nipd` = " + nipd + ";";
+
+            // Menyiapkan alamat untuk dieksekusi
+            try
+            {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.executeUpdate(query);
+                JOptionPane.showMessageDialog(null, "Data Telah Berhasil Di Hapus");
+                System.out.println("Data berhasil dihapus");
+            } 
+            catch (Exception a)
+            {
+                System.out.println(a);
+                JOptionPane.showMessageDialog(null, "Data Gagal Di Hapus");
+                System.out.println("Data gagal dihapus");
+            } 
+            finally
+            {
+            tampilData();
+            clearData();
+            }
             }
         
         
@@ -819,6 +855,7 @@ public class form_siswa extends javax.swing.JFrame {
 
     private void ButtonHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonHapusActionPerformed
         // TODO add your handling code here:
+        hapusData();
     }//GEN-LAST:event_ButtonHapusActionPerformed
 
     private void perempuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_perempuanActionPerformed
