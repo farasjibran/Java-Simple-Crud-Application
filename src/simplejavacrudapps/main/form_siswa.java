@@ -66,7 +66,7 @@ public class form_siswa extends javax.swing.JFrame {
                 System.out.println("Tampil data");
                 int row = tableSiswa.getRowCount();
 
-                //  Perulangan menghapus data setelah di clear
+                //  Perulangan menghapus data setelah di tambahkan
                 for (int a = 0; a < row; a++)
                     {
                         model.removeRow(0);
